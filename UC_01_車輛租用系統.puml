@@ -1,0 +1,16 @@
+@startuml
+left to right direction
+
+actor 租車用戶
+
+usecase "線上租車" as UC_租車
+usecase "選擇車型" as UC_選擇車型
+usecase "選擇租用時間" as UC_選擇租用時間
+usecase "計算租金" as UC_計算租金
+
+租車用戶 --> UC_租車
+UC_租車 --> UC_選擇車型 : <<include>>
+UC_租車 --> UC_選擇租用時間 : <<include>>
+UC_租車 --> UC_計算租金 : <<include>>
+
+@enduml

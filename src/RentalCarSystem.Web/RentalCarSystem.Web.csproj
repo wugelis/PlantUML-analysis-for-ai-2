@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RentalCarSystem.Domain\RentalCarSystem.Domain.csproj" />
+    <ProjectReference Include="..\RentalCarSystem.Application\RentalCarSystem.Application.csproj" />
+    <ProjectReference Include="..\RentalCarSystem.Infrastructure\RentalCarSystem.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

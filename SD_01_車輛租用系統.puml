@@ -1,0 +1,24 @@
+
+@startuml SD_01_車輛租用系統
+actor Customer as "租車用戶"
+participant Account
+participant RentalService
+participant Car
+participant RentalFeeCalculator as FeeCalculator
+
+== Registration and Login ==
+Customer -> Account: RegisterAccount(userInfo)
+Account --> Customer: RegistrationResult
+Customer -> Account: Login(userId, password)
+Account --> Customer: LoginResult
+
+== Car Rental Process ==
+Customer -> RentalService: ToRentalCar(userId)
+RentalService -> Car: SelectCarType(carType)
+Car --> RentalService: CarTypeSelected
+RentalService -> RentalService: SelectRentalPeriod(startDate, endDate)
+RentalService -> FeeCalculator: CalculateRentalFee(carType, startDate, endDate)
+FeeCalculator --> RentalService: RentalFee
+RentalService --> Customer: RentalConfirmation
+
+@enduml

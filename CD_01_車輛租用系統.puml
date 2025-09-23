@@ -1,0 +1,33 @@
+
+@startuml CD_01_車輛租用系統
+
+class Customer {
+	+RegisterAccount(userInfo)
+	+Login(userId, password)
+	+ToRentalCar(userId)
+}
+
+class Account {
+	+RegisterAccount(userInfo)
+	+Login(userId, password)
+}
+
+class RentalService {
+	+ToRentalCar(userId)
+	+SelectRentalPeriod(startDate, endDate)
+}
+
+class Car {
+	+SelectCarType(carType)
+}
+
+class FeeCalculator {
+	+CalculateRentalFee(carType, startDate, endDate)
+}
+
+Customer --> Account : 註冊/登入
+Customer --> RentalService : 租用車輛
+RentalService --> Car : 選擇車型
+RentalService --> FeeCalculator : 計算租金
+
+@enduml
