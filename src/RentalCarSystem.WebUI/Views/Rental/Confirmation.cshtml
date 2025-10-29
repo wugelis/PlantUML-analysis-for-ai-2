@@ -1,0 +1,175 @@
+@model RentalConfirmationViewModel
+@{
+    ViewData["Title"] = "租車確認";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card confirmation-card shadow-lg">
+                <div class="card-header confirmation-header text-center py-4">
+                    <h2 class="mb-0">
+                        <i class="fas fa-check-circle fa-2x mb-3"></i>
+                        <br>租車預約成功！
+                    </h2>
+                </div>
+                <div class="card-body p-5">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="fw-bold text-primary mb-3">
+                                <i class="fas fa-file-alt"></i> 預約詳情
+                            </h5>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td class="fw-bold">預約編號：</td>
+                                    <td class="text-primary">#@Model.RentalId.ToString().Substring(0, 8).ToUpper()</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">客戶姓名：</td>
+                                    <td>@Model.CustomerName</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">車輛資訊：</td>
+                                    <td>@Model.CarInfo</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">預約時間：</td>
+                                    <td>@Model.CreatedDate.ToString("yyyy/MM/dd HH:mm")</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-bold text-primary mb-3">
+                                <i class="fas fa-calendar-alt"></i> 租用資訊
+                            </h5>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td class="fw-bold">開始日期：</td>
+                                    <td>@Model.StartDate.ToString("yyyy/MM/dd")</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">結束日期：</td>
+                                    <td>@Model.EndDate.ToString("yyyy/MM/dd")</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">租用天數：</td>
+                                    <td>@Model.RentalDays 天</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">總費用：</td>
+                                    <td class="text-success fw-bold fs-5">NT$@Model.TotalFee.ToString("N0")</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="alert alert-info">
+                        <h6 class="alert-heading">
+                            <i class="fas fa-info-circle"></i> 重要提醒
+                        </h6>
+                        <ul class="mb-0">
+                            <li>請於租車開始日期當天，攜帶有效駕照至門市取車</li>
+                            <li>如需變更或取消預約，請於24小時前聯絡客服</li>
+                            <li>逾期未取車將收取相關費用</li>
+                            <li>請注意保管您的預約編號，取車時需要提供</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6 mb-3">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h6 class="fw-bold">客服專線</h6>
+                                    <p class="mb-0">
+                                        <i class="fas fa-phone text-primary"></i>
+                                        <strong>0800-123-456</strong>
+                                    </p>
+                                    <small class="text-muted">24小時服務</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h6 class="fw-bold">電子信箱</h6>
+                                    <p class="mb-0">
+                                        <i class="fas fa-envelope text-primary"></i>
+                                        service@rentalcar.com
+                                    </p>
+                                    <small class="text-muted">客服信箱</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                        <button class="btn btn-outline-primary btn-lg me-md-2" onclick="window.print()">
+                            <i class="fas fa-print"></i> 列印預約單
+                        </button>
+                        <a href="@Url.Action("Create", "Rental")" class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus"></i> 再次租車
+                        </a>
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-home"></i> 返回首頁
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 成功動畫效果 -->
+            <div class="text-center mt-4 fade-in">
+                <div class="alert alert-success d-inline-block">
+                    <i class="fas fa-thumbs-up"></i>
+                    感謝您選擇我們的租車服務！預祝您旅途愉快！
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // 添加成功動畫效果
+            $('.confirmation-card').addClass('fade-in');
+            
+            // 5秒後自動隱藏成功訊息
+            setTimeout(function() {
+                $('.alert-success').fadeOut('slow');
+            }, 5000);
+            
+            // 列印功能
+            window.addEventListener('beforeprint', function() {
+                // 隱藏不需要列印的元素
+                $('.btn').hide();
+                $('.alert-success').hide();
+            });
+            
+            window.addEventListener('afterprint', function() {
+                // 恢復隱藏的元素
+                $('.btn').show();
+                $('.alert-success').show();
+            });
+        });
+    </script>
+    
+    <style>
+        @media print {
+            .btn, .alert-success {
+                display: none !important;
+            }
+            
+            .confirmation-card {
+                border: none !important;
+                box-shadow: none !important;
+            }
+            
+            .confirmation-header {
+                background: #28a745 !important;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+    </style>
+}

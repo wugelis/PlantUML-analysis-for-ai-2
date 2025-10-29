@@ -27,16 +27,8 @@
   - `IQuery<TResult>`: 查詢介面標記
   - `IQueryHandler<TQuery, TResult>`: 查詢處理器介面
 
-#### 2.3 資料傳輸物件 (DTOs)
 
-**DTO 類別群** (`Common/Dtos.cs`)
-- **CustomerDto**: 客戶資料傳輸物件
-- **CarDto**: 車輛資料傳輸物件
-- **RentalDto**: 租賃資料傳輸物件
-- **CreateCustomerDto**: 建立客戶的請求物件
-- **CreateRentalDto**: 建立租賃的請求物件
-
-#### 2.4 用例實現 (Use Cases)
+#### 2.3 用例實現 (Use Cases)
 
 **客戶管理用例**:
 

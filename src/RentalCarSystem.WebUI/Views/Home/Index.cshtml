@@ -1,0 +1,167 @@
+@model HomeViewModel
+@{
+    ViewData["Title"] = "首頁";
+}
+
+<!-- Hero Section -->
+<section class="bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-3">車輛租用系統</h1>
+                <p class="lead mb-4">提供最優質的租車服務，讓您的旅程更加便利舒適</p>
+                @if (!Model.IsLoggedIn)
+                {
+                    <div class="d-flex gap-3">
+                        <a href="@Url.Action("Register", "Account")" class="btn btn-light btn-lg">
+                            <i class="fas fa-user-plus"></i> 立即註冊
+                        </a>
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-sign-in-alt"></i> 會員登入
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-light d-inline-block">
+                        <i class="fas fa-user text-primary"></i>
+                        歡迎回來，<strong>@Model.CustomerName</strong>！
+                    </div>
+                    <div class="mt-3">
+                        <a href="@Url.Action("Create", "Rental")" class="btn btn-light btn-lg">
+                            <i class="fas fa-car"></i> 開始租車
+                        </a>
+                    </div>
+                }
+            </div>
+            <div class="col-lg-6 text-center">
+                <i class="fas fa-car feature-icon" style="font-size: 8rem; color: rgba(255,255,255,0.8);"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="fw-bold">為什麼選擇我們？</h2>
+                <p class="text-muted">專業的服務品質，讓您租車無憂</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card feature-card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="fas fa-shield-alt feature-icon"></i>
+                        <h4>安全保障</h4>
+                        <p class="text-muted">所有車輛都經過嚴格檢測，確保您的行車安全</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="fas fa-clock feature-icon"></i>
+                        <h4>24小時服務</h4>
+                        <p class="text-muted">全天候客服支援，隨時解決您的問題</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="fas fa-dollar-sign feature-icon"></i>
+                        <h4>優惠價格</h4>
+                        <p class="text-muted">透明的計價方式，沒有隱藏費用</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="fw-bold">車輛類型與價格</h2>
+                <p class="text-muted">多樣化的車型選擇，滿足不同需求</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            @foreach (var carType in Model.CarTypes)
+            {
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <div class="card price-card h-100">
+                        <div class="card-header">
+                            @switch(carType)
+                            {
+                                case "Car":
+                                    <i class="fas fa-car mb-2" style="font-size: 2rem;"></i>
+                                    <h5>轎車</h5>
+                                    break;
+                                case "SUV":
+                                    <i class="fas fa-truck mb-2" style="font-size: 2rem;"></i>
+                                    <h5>休旅車</h5>
+                                    break;
+                                case "Truck":
+                                    <i class="fas fa-shipping-fast mb-2" style="font-size: 2rem;"></i>
+                                    <h5>貨車</h5>
+                                    break;
+                                case "SportsCar":
+                                    <i class="fas fa-rocket mb-2" style="font-size: 2rem;"></i>
+                                    <h5>跑車</h5>
+                                    break;
+                                case "ElectricCar":
+                                    <i class="fas fa-bolt mb-2" style="font-size: 2rem;"></i>
+                                    <h5>電動車</h5>
+                                    break;
+                            }
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="price-amount">NT$@Model.CarTypePrices[carType].ToString("N0")</div>
+                            <small class="text-muted">每天</small>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        @if (Model.IsLoggedIn)
+        {
+            <div class="text-center mt-4">
+                <a href="@Url.Action("Create", "Rental")" class="btn btn-primary btn-lg">
+                    <i class="fas fa-car"></i> 立即預約租車
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="text-center mt-4">
+                <p class="text-muted mb-3">想要租車？請先註冊會員</p>
+                <a href="@Url.Action("Register", "Account")" class="btn btn-primary btn-lg">
+                    <i class="fas fa-user-plus"></i> 註冊會員
+                </a>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- CTA Section -->
+@if (!Model.IsLoggedIn)
+{
+    <section class="py-5 bg-primary text-white">
+        <div class="container text-center">
+            <h2 class="fw-bold mb-3">準備開始您的旅程了嗎？</h2>
+            <p class="lead mb-4">註冊會員即可享受便利的線上租車服務</p>
+            <a href="@Url.Action("Register", "Account")" class="btn btn-light btn-lg me-3">
+                <i class="fas fa-user-plus"></i> 立即註冊
+            </a>
+            <a href="@Url.Action("Login", "Account")" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-sign-in-alt"></i> 會員登入
+            </a>
+        </div>
+    </section>
+}

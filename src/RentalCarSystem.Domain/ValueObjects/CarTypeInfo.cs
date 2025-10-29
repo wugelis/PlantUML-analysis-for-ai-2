@@ -5,7 +5,8 @@ public enum CarType
     Car,
     SUV,
     Truck,
-    SportsCar
+    SportsCar,
+    ElectricCar
 }
 
 public record CarTypeInfo(CarType Type, decimal DailyRate, string DisplayName)
@@ -15,7 +16,8 @@ public record CarTypeInfo(CarType Type, decimal DailyRate, string DisplayName)
         { CarType.Car, new CarTypeInfo(CarType.Car, 1000m, "轎車") },
         { CarType.SUV, new CarTypeInfo(CarType.SUV, 1500m, "休旅車") },
         { CarType.Truck, new CarTypeInfo(CarType.Truck, 2000m, "卡車") },
-        { CarType.SportsCar, new CarTypeInfo(CarType.SportsCar, 3000m, "跑車") }
+        { CarType.SportsCar, new CarTypeInfo(CarType.SportsCar, 3000m, "跑車") },
+        { CarType.ElectricCar, new CarTypeInfo(CarType.ElectricCar, 2800m, "電動車") }
     };
     
     public static CarTypeInfo GetByType(CarType type)

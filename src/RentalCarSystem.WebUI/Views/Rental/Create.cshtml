@@ -1,0 +1,255 @@
+@model RentalViewModel
+@{
+    ViewData["Title"] = "租車預約";
+}
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-car"></i> 租車預約
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post" novalidate>
+                        <input asp-for="CustomerId" type="hidden" />
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none"></div>
+                        
+                        <!-- 步驟 1: 選擇車輛類型 -->
+                        <div class="mb-4">
+                            <h5 class="fw-bold mb-3">
+                                <span class="badge bg-primary me-2">1</span>選擇車輛類型
+                            </h5>
+                            <input asp-for="CarType" type="hidden" />
+                            <div class="car-type-selector">
+                                <div class="car-type-option" data-car-type="Car">
+                                    <div class="car-type-icon">
+                                        <i class="fas fa-car"></i>
+                                    </div>
+                                    <h6>轎車</h6>
+                                    <small class="text-muted">NT$1,000/天</small>
+                                </div>
+                                <div class="car-type-option" data-car-type="SUV">
+                                    <div class="car-type-icon">
+                                        <i class="fas fa-truck"></i>
+                                    </div>
+                                    <h6>休旅車</h6>
+                                    <small class="text-muted">NT$1,500/天</small>
+                                </div>
+                                <div class="car-type-option" data-car-type="Truck">
+                                    <div class="car-type-icon">
+                                        <i class="fas fa-shipping-fast"></i>
+                                    </div>
+                                    <h6>貨車</h6>
+                                    <small class="text-muted">NT$2,000/天</small>
+                                </div>
+                                <div class="car-type-option" data-car-type="SportsCar">
+                                    <div class="car-type-icon">
+                                        <i class="fas fa-rocket"></i>
+                                    </div>
+                                    <h6>跑車</h6>
+                                    <small class="text-muted">NT$3,000/天</small>
+                                </div>
+                                <div class="car-type-option" data-car-type="ElectricCar">
+                                    <div class="car-type-icon">
+                                        <i class="fas fa-bolt"></i>
+                                    </div>
+                                    <h6>電動車</h6>
+                                    <small class="text-muted">NT$2,800/天</small>
+                                </div>
+                            </div>
+                            <span asp-validation-for="CarType" class="field-validation-error"></span>
+                        </div>
+
+                        <!-- 步驟 2: 選擇租用時間 -->
+                        <div class="mb-4">
+                            <h5 class="fw-bold mb-3">
+                                <span class="badge bg-primary me-2">2</span>選擇租用時間
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input asp-for="StartDate" class="form-control" id="startDate" type="date" />
+                                        <label for="startDate">
+                                            <i class="fas fa-calendar-alt"></i> 租用開始日期
+                                        </label>
+                                        <span asp-validation-for="StartDate" class="field-validation-error"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input asp-for="EndDate" class="form-control" id="endDate" type="date" />
+                                        <label for="endDate">
+                                            <i class="fas fa-calendar-alt"></i> 租用結束日期
+                                        </label>
+                                        <span asp-validation-for="EndDate" class="field-validation-error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 步驟 3: 選擇具體車輛 -->
+                        <div class="mb-4">
+                            <h5 class="fw-bold mb-3">
+                                <span class="badge bg-primary me-2">3</span>選擇車輛
+                            </h5>
+                            <div class="form-floating">
+                                <select asp-for="CarId" class="form-select" id="carSelect">
+                                    <option value="">請先選擇車輛類型和時間</option>
+                                </select>
+                                <label for="carSelect">
+                                    <i class="fas fa-car"></i> 可用車輛
+                                </label>
+                                <span asp-validation-for="CarId" class="field-validation-error"></span>
+                            </div>
+                        </div>
+
+                        <!-- 租金計算顯示 -->
+                        <div id="fee-display" class="fee-calculation" style="display: none;">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h6 class="mb-1">租用費用試算</h6>
+                                    <div class="text-muted">
+                                        <i class="fas fa-calendar-day"></i>
+                                        租用天數：<span id="rental-days">-</span> 天
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <div class="fee-amount" id="rental-fee">NT$0</div>
+                                    <small class="text-muted">預估總費用</small>
+                                </div>
+                                <div class="loading text-center" style="display: none;">
+                                    <div class="spinner-border text-primary" role="status"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 提交按鈕 -->
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-check"></i> 確認預約
+                            </button>
+                            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> 取消
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 右側資訊欄 -->
+        <div class="col-lg-4">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle"></i> 租車須知
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            租車前請準備有效駕照
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            最少租用1天，最多30天
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            提前24小時預約可享優惠
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            免費提供GPS導航
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            24小時道路救援服務
+                        </li>
+                    </ul>
+                    
+                    <hr>
+                    
+                    <h6 class="fw-bold">聯絡我們</h6>
+                    <p class="small text-muted mb-1">
+                        <i class="fas fa-phone me-1"></i> 服務專線：0800-123-456
+                    </p>
+                    <p class="small text-muted mb-0">
+                        <i class="fas fa-envelope me-1"></i> service@rentalcar.com
+                    </p>
+                </div>
+            </div>
+            
+            <!-- 車型對比 -->
+            <div class="card shadow mt-3">
+                <div class="card-header bg-secondary text-white">
+                    <h6 class="mb-0">
+                        <i class="fas fa-chart-bar"></i> 車型特色對比
+                    </h6>
+                </div>
+                <div class="card-body p-3">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>車型</th>
+                                    <th>適用</th>
+                                    <th>價格/天</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><i class="fas fa-car text-primary"></i> 轎車</td>
+                                    <td><small>商務出行</small></td>
+                                    <td><small>NT$1,000</small></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-truck text-success"></i> 休旅車</td>
+                                    <td><small>家庭旅遊</small></td>
+                                    <td><small>NT$1,500</small></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-shipping-fast text-warning"></i> 貨車</td>
+                                    <td><small>貨物運輸</small></td>
+                                    <td><small>NT$2,000</small></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-rocket text-danger"></i> 跑車</td>
+                                    <td><small>享受駕馭</small></td>
+                                    <td><small>NT$3,000</small></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-bolt text-info"></i> 電動車</td>
+                                    <td><small>環保出行</small></td>
+                                    <td><small>NT$2,800</small></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // 設定今天為最小日期
+            const today = new Date().toISOString().split('T')[0];
+            $('#startDate').attr('min', today);
+            
+            // 如果有預設值，設定它們
+            if ($('#startDate').val()) {
+                const startDate = $('#startDate').val();
+                const minEndDate = new Date(startDate);
+                minEndDate.setDate(minEndDate.getDate() + 1);
+                $('#endDate').attr('min', minEndDate.toISOString().split('T')[0]);
+            }
+        });
+    </script>
+}

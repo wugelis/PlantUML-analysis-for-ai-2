@@ -1,3 +1,4 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
@@ -9,6 +10,17 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentalCarSystem.Infrastructure", "src\RentalCarSystem.Infrastructure\RentalCarSystem.Infrastructure.csproj", "{4E0E6F49-7C2F-4F0C-0D3C-5F6F7A8B9C0F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentalCarSystem.Web", "src\RentalCarSystem.Web\RentalCarSystem.Web.csproj", "{5F1F7F50-8D3F-4F1D-1E4D-6F7F8A9B0D1F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "方案項目", "方案項目", "{8DDC4786-5FC8-F15C-1CA5-9F41FD4BEB75}"
+	ProjectSection(SolutionItems) = preProject
+		Application-RentalCar-Dto.prompt.md = Application-RentalCar-Dto.prompt.md
+		.github\prompts\Application-RentalCar-Rules.prompt.md = .github\prompts\Application-RentalCar-Rules.prompt.md
+		CD_01_車輛租用系統.mdpuml = CD_01_車輛租用系統.mdpuml
+		.github\prompts\Domain-RentalCar-Rules.prompt.md = .github\prompts\Domain-RentalCar-Rules.prompt.md
+		README.md = README.md
+		SD_01_車輛租用系統.mdpuml = SD_01_車輛租用系統.mdpuml
+		UC_01_車輛租用系統.mdpuml = UC_01_車輛租用系統.mdpuml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,5 +44,11 @@ Global
 		{5F1F7F50-8D3F-4F1D-1E4D-6F7F8A9B0D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F1F7F50-8D3F-4F1D-1E4D-6F7F8A9B0D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F1F7F50-8D3F-4F1D-1E4D-6F7F8A9B0D1F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {26DED801-C1A5-4C8F-9762-AF7469885291}
 	EndGlobalSection
 EndGlobal

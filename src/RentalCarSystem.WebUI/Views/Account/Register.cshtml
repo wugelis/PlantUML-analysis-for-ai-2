@@ -1,0 +1,166 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "會員註冊";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0">
+                        <i class="fas fa-user-plus"></i> 會員註冊
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Register" method="post" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none"></div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="UserId" class="form-control" id="userId" placeholder="請輸入使用者ID" />
+                            <label for="userId">
+                                <i class="fas fa-user"></i> 使用者ID
+                            </label>
+                            <span asp-validation-for="UserId" class="field-validation-error"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Name" class="form-control" id="name" placeholder="請輸入姓名" />
+                            <label for="name">
+                                <i class="fas fa-id-card"></i> 姓名
+                            </label>
+                            <span asp-validation-for="Name" class="field-validation-error"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Email" class="form-control" id="email" placeholder="請輸入電子郵件" />
+                            <label for="email">
+                                <i class="fas fa-envelope"></i> 電子郵件
+                            </label>
+                            <span asp-validation-for="Email" class="field-validation-error"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Password" class="form-control" id="password" placeholder="請輸入密碼" />
+                            <label for="password">
+                                <i class="fas fa-lock"></i> 密碼
+                            </label>
+                            <span asp-validation-for="Password" class="field-validation-error"></span>
+                            <div class="form-text">密碼長度至少6個字符</div>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="ConfirmPassword" class="form-control" id="confirmPassword" placeholder="請再次輸入密碼" />
+                            <label for="confirmPassword">
+                                <i class="fas fa-lock"></i> 確認密碼
+                            </label>
+                            <span asp-validation-for="ConfirmPassword" class="field-validation-error"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-user-plus"></i> 註冊帳號
+                            </button>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <div class="text-center">
+                            <p class="text-muted mb-2">已經有帳號了？</p>
+                            <a href="@Url.Action("Login", "Account")" class="btn btn-outline-primary">
+                                <i class="fas fa-sign-in-alt"></i> 會員登入
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // 即時驗證使用者ID
+            $('#userId').on('blur', function() {
+                const userId = $(this).val();
+                if (userId && userId.length < 3) {
+                    showFieldError('UserId', '使用者ID長度至少3個字符');
+                } else {
+                    clearFieldError('UserId');
+                }
+            });
+            
+            // 即時驗證密碼
+            $('#password').on('input', function() {
+                const password = $(this).val();
+                const confirmPassword = $('#confirmPassword').val();
+                
+                if (password && password.length < 6) {
+                    showFieldError('Password', '密碼長度至少6個字符');
+                } else {
+                    clearFieldError('Password');
+                }
+                
+                // 檢查確認密碼
+                if (confirmPassword && password !== confirmPassword) {
+                    showFieldError('ConfirmPassword', '密碼和確認密碼不匹配');
+                } else if (confirmPassword) {
+                    clearFieldError('ConfirmPassword');
+                }
+            });
+            
+            // 即時驗證確認密碼
+            $('#confirmPassword').on('input', function() {
+                const password = $('#password').val();
+                const confirmPassword = $(this).val();
+                
+                if (confirmPassword && password !== confirmPassword) {
+                    showFieldError('ConfirmPassword', '密碼和確認密碼不匹配');
+                } else {
+                    clearFieldError('ConfirmPassword');
+                }
+            });
+            
+            // 表單提交驗證
+            $('form').on('submit', function(e) {
+                let isValid = true;
+                
+                // 驗證必填欄位
+                $('input[required]').each(function() {
+                    if (!$(this).val().trim()) {
+                        $(this).addClass('is-invalid');
+                        isValid = false;
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+                
+                // 驗證密碼匹配
+                const password = $('#password').val();
+                const confirmPassword = $('#confirmPassword').val();
+                if (password !== confirmPassword) {
+                    showFieldError('ConfirmPassword', '密碼和確認密碼不匹配');
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    e.preventDefault();
+                    showError('請檢查表單中的錯誤訊息');
+                }
+            });
+        });
+        
+        function showFieldError(fieldName, message) {
+            const field = $(`input[name="${fieldName}"]`);
+            field.addClass('is-invalid');
+            field.next().next('.field-validation-error').text(message).show();
+        }
+        
+        function clearFieldError(fieldName) {
+            const field = $(`input[name="${fieldName}"]`);
+            field.removeClass('is-invalid');
+            field.next().next('.field-validation-error').hide();
+        }
+    </script>
+}

@@ -3,6 +3,7 @@ using RentalCarSystem.Application.UseCases.Customers;
 using RentalCarSystem.Application.UseCases.Cars;
 using RentalCarSystem.Application.UseCases.Rentals;
 using RentalCarSystem.Domain.ValueObjects;
+using RentalCarSystem.Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace RentalCarSystem.Web.Services;
@@ -11,6 +12,7 @@ public class ConsoleRentalService
 {
     private readonly IServiceProvider _serviceProvider;
     private Guid? _currentCustomerId;
+    private string? _currentUserId; // 新增：儲存當前使用者的UserId以進行VIP驗證
 
     public ConsoleRentalService(IServiceProvider serviceProvider)
     {
@@ -87,6 +89,7 @@ public class ConsoleRentalService
                 break;
             case "2":
                 _currentCustomerId = null;
+                _currentUserId = null; // 清除當前使用者ID
                 Console.WriteLine("已登出");
                 await Task.Delay(1000);
                 break;
@@ -165,7 +168,15 @@ public class ConsoleRentalService
             if (customerId.HasValue)
             {
                 _currentCustomerId = customerId.Value;
+                _currentUserId = userId; // 儲存當前使用者ID以進行VIP驗證
                 Console.WriteLine("登入成功！");
+                
+                // 顯示VIP狀態
+                if (Customer.IfCustomerIsVIP(userId))
+                {
+                    Console.WriteLine("✨ 歡迎VIP客戶！您可以租用所有車型包括跑車。");
+                }
+                
                 Console.WriteLine("按任意鍵繼續...");
                 Console.ReadKey();
             }
@@ -189,9 +200,9 @@ public class ConsoleRentalService
         Console.Clear();
         Console.WriteLine("=== 租車流程 ===");
 
-        // 1. 選擇車型
+        // 1. 選擇車型 (包含VIP檢查)
         var carType = await SelectCarTypeAsync();
-        if (carType == null) return;
+        if (carType == null) return; // 使用者選擇返回主選單
 
         // 2. 顯示可用車輛
         var selectedCar = await SelectAvailableCarAsync(carType.Value);
@@ -205,27 +216,88 @@ public class ConsoleRentalService
         await ConfirmRentalAsync(selectedCar, period.Value);
     }
 
-    private Task<CarType?> SelectCarTypeAsync()
+    private async Task<CarType?> SelectCarTypeAsync()
     {
-        Console.WriteLine("請選擇車型:");
-        Console.WriteLine("1. 轎車 (Car) - $1,000/天");
-        Console.WriteLine("2. 休旅車 (SUV) - $1,500/天");
-        Console.WriteLine("3. 卡車 (Truck) - $2,000/天");
-        Console.WriteLine("4. 跑車 (SportsCar) - $3,000/天");
-        Console.WriteLine("0. 返回主選單");
-        Console.Write("請選擇 (0-4): ");
-
-        var choice = Console.ReadLine();
-        CarType? result = choice switch
+        while (true) // 循環直到使用者做出有效選擇
         {
-            "1" => CarType.Car,
-            "2" => CarType.SUV,
-            "3" => CarType.Truck,
-            "4" => CarType.SportsCar,
-            "0" => null,
-            _ => throw new ArgumentException("無效的車型選擇")
-        };
-        return Task.FromResult(result);
+            Console.Clear();
+            Console.WriteLine("=== 選擇車型 ===");
+            Console.WriteLine("1. 轎車 (Car) - $1,000/天");
+            Console.WriteLine("2. 休旅車 (SUV) - $1,500/天");
+            Console.WriteLine("3. 卡車 (Truck) - $2,000/天");
+            
+            // 檢查是否為VIP客戶來決定是否顯示跑車選項
+            bool isVip = !string.IsNullOrEmpty(_currentUserId) && Customer.IfCustomerIsVIP(_currentUserId);
+            
+            if (isVip)
+            {
+                Console.WriteLine("4. 跑車 (SportsCar) - $3,000/天 ✨ VIP專屬");
+            }
+            else
+            {
+                Console.WriteLine("4. 跑車 (SportsCar) - $3,000/天 🚫 僅限VIP客戶");
+            }
+            
+            Console.WriteLine("5. 電動車 (ElectricCar) - $2,800/天");
+            Console.WriteLine("0. 返回主選單");
+            Console.Write("請選擇 (0-5): ");
+
+            var choice = Console.ReadLine();
+            
+            switch (choice)
+            {
+                case "1":
+                    return CarType.Car;
+                case "2":
+                    return CarType.SUV;
+                case "3":
+                    return CarType.Truck;
+                case "4":
+                    var sportsCarResult = await HandleSportsCarSelectionAsync(isVip);
+                    if (sportsCarResult.HasValue)
+                        return sportsCarResult.Value;
+                    // 如果返回null表示非VIP用戶選擇跑車，繼續循環讓用戶重新選擇
+                    break;
+                case "5":
+                    return CarType.ElectricCar;
+                case "0":
+                    return null;
+                default:
+                    Console.WriteLine("無效的選擇，請重新輸入");
+                    Console.WriteLine("按任意鍵繼續...");
+                    Console.ReadKey();
+                    break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 處理跑車選擇，檢查VIP權限
+    /// </summary>
+    /// <param name="isVip">是否為VIP客戶</param>
+    /// <returns>如果是VIP則返回SportsCar，否則顯示錯誤訊息並返回null</returns>
+    private async Task<CarType?> HandleSportsCarSelectionAsync(bool isVip)
+    {
+        if (isVip)
+        {
+            Console.WriteLine("✨ VIP客戶專屬跑車租用服務已啟用");
+            await Task.Delay(1500); // 短暫停留顯示VIP訊息
+            return CarType.SportsCar;
+        }
+        else
+        {
+            Console.WriteLine();
+            Console.WriteLine("🚫 抱歉，跑車租用服務僅開放給VIP客戶");
+            Console.WriteLine("💡 VIP客戶識別規則:");
+            Console.WriteLine("   • 使用者ID以 'VIP' 開頭 (如: VIP001, VIPJohn)");
+            Console.WriteLine("   • 使用者ID包含 'premium' (如: premium_user)");
+            Console.WriteLine("   • 特殊VIP帳號: admin, manager, director, ceo");
+            Console.WriteLine();
+            Console.WriteLine("如需升級為VIP會員，請聯繫客服");
+            Console.WriteLine("按任意鍵返回車型選單...");
+            Console.ReadKey();
+            return null; // 返回null將重新顯示車型選單
+        }
     }
 
     private async Task<CarDto?> SelectAvailableCarAsync(CarType carType)

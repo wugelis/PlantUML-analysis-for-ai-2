@@ -1,0 +1,194 @@
+/* 車輛租用系統自定義樣式 */
+
+html {
+  font-size: 14px;
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.navbar-brand i {
+  margin-right: 8px;
+}
+
+/* 卡片樣式 */
+.feature-card {
+  transition: transform 0.2s;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  color: #0d6efd;
+  margin-bottom: 1rem;
+}
+
+/* 價格表樣式 */
+.price-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.price-card .card-header {
+  background: linear-gradient(45deg, #0d6efd, #0056b3);
+  color: white;
+  text-align: center;
+  font-weight: bold;
+}
+
+.price-amount {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #0d6efd;
+}
+
+/* 表單樣式 */
+.form-floating {
+  margin-bottom: 1rem;
+}
+
+.btn {
+  border-radius: 25px;
+  padding: 10px 30px;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background: linear-gradient(45deg, #0d6efd, #0056b3);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(45deg, #0056b3, #004085);
+}
+
+/* 車輛類型選擇樣式 */
+.car-type-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.car-type-option {
+  border: 2px solid #e9ecef;
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: white;
+}
+
+.car-type-option:hover {
+  border-color: #0d6efd;
+  background-color: #f8f9fa;
+}
+
+.car-type-option.selected {
+  border-color: #0d6efd;
+  background-color: #e7f1ff;
+}
+
+.car-type-icon {
+  font-size: 2rem;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+}
+
+.car-type-option.selected .car-type-icon {
+  color: #0d6efd;
+}
+
+/* 租金計算樣式 */
+.fee-calculation {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+}
+
+.fee-amount {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #28a745;
+}
+
+/* 確認頁面樣式 */
+.confirmation-card {
+  border: none;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.confirmation-header {
+  background: linear-gradient(45deg, #28a745, #20c997);
+  color: white;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .car-type-selector {
+    grid-template-columns: 1fr;
+  }
+  
+  .navbar-nav {
+    text-align: center;
+  }
+  
+  .price-amount {
+    font-size: 1.5rem;
+  }
+}
+
+/* 動畫效果 */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* 載入動畫 */
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #0d6efd;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 驗證錯誤樣式 */
+.field-validation-error {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.input-validation-error {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
