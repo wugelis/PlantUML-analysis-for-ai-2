@@ -14,8 +14,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "方案項目", "方案項目", "{8DDC4786-5FC8-F15C-1CA5-9F41FD4BEB75}"
 	ProjectSection(SolutionItems) = preProject
 		Application-RentalCar-Dto.prompt.md = Application-RentalCar-Dto.prompt.md
-		.github\prompts\Application-RentalCar-Rules.prompt.md = .github\prompts\Application-RentalCar-Rules.prompt.md
 		CD_01_車輛租用系統.mdpuml = CD_01_車輛租用系統.mdpuml
+		.github\prompts\Application-RentalCar-UseCase.prompt.md = .github\prompts\Application-RentalCar-UseCase.prompt.md
 		.github\prompts\Domain-RentalCar-Rules.prompt.md = .github\prompts\Domain-RentalCar-Rules.prompt.md
 		README.md = README.md
 		SD_01_車輛租用系統.mdpuml = SD_01_車輛租用系統.mdpuml
